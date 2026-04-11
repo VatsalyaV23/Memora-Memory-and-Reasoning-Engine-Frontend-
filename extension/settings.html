@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Org Memory Settings</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 40px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #333;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 10px;
+    }
+
+    .setting-group {
+      margin-bottom: 20px;
+    }
+
+    .setting-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .setting-group input,
+    .setting-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 13px;
+      transition: border-color 0.3s;
+    }
+
+    .setting-group input:focus,
+    .setting-group select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .status-message {
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+      font-size: 12px;
+      display: none;
+    }
+
+    .status-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .status-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .status-message.show {
+      display: block;
+    }
+
+    .info-box {
+      background: #f0f0ff;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚙️ Settings</h1>
+      <p>Configure Org Memory Engine</p>
+    </div>
+
+    <div class="content">
+      <!-- Backend Settings -->
+      <div class="section">
+        <h2>🔧 Backend Configuration</h2>
+
+        <div class="setting-group">
+          <label>Backend URL</label>
+          <input type="text" id="backend-url" placeholder="http://localhost:8000">
+        </div>
+
+        <div class="info-box">
+          💡 <strong>Default:</strong> http://localhost:8000<br>
+          Make sure your backend is running before using the extension.
+        </div>
+
+        <div class="button-group">
+          <button class="btn btn-primary" id="test-btn">🔗 Test Connection</button>
+          <button class="btn btn-secondary" id="save-btn">💾 Save</button>
+        </div>
+
+        <div class="status-message" id="status"></div>
+      </div>
+
+      <!-- About -->
+      <div class="section">
+        <h2>ℹ️ About</h2>
+
+        <div style="font-size: 12px; line-height: 1.8; color: #666;">
+          <strong>Org Memory Engine v1.0</strong><br>
+          <br>
+          A chrome extension that captures organizational decisions and extracts insights using AI.
+          <br>
+          <br>
+          <strong>Features:</strong><br>
+          ✓ Capture text from any webpage<br>
+          ✓ Extract decisions automatically<br>
+          ✓ Ask questions with RAG<br>
+          ✓ Real-time agent monitoring<br>
+          ✓ Store in PostgreSQL<br>
+          <br>
+          <strong>Technology Stack:</strong><br>
+          • FastAPI (Backend)<br>
+          • PostgreSQL (Database)<br>
+          • ChromaDB (Vector Search)<br>
+          • Google Gemini (LLM)<br>
+          • Chrome Extension API<br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Load settings
+    document.addEventListener('DOMContentLoaded', () => {
+      chrome.storage.sync.get(['backendUrl'], (result) => {
+        if (result.backendUrl) {
+          document.getElementById('backend-url').value = result.backendUrl;
+        }
+      });
+    });
+
+    // Test connection
+    document.getElementById('test-btn').addEventListener('click', async () => {
+      const url = document.getElementById('backend-url').value;
+      const statusDiv = document.getElementById('status');
+
+      if (!url) {
+        showStatus('Enter a backend URL', 'error');
+        return;
+      }
+
+      showStatus('Testing connection...', 'success');
+
+      try {
+        const response = await fetch(`${url}/health`);
+        if (response.ok) {
+          const data = await response.json();
+          showStatus(`✅ Connected! Status: ${data.status}`, 'success');
+        } else {
+          showStatus(`❌ Backend not responding`, 'error');
+        }
+      } catch (error) {
+        showStatus(`❌ Connection failed: ${error.message}`, 'error');
+      }
+    });
+
+    // Save settings
+    document.getElementById('save-btn').addEventListener('click', () => {
+      const url = document.getElementById('backend-url').value;
+      if (!url) {
+        showStatus('Enter a backend URL', 'error');
+        return;
+      }
+      chrome.storage.sync.set({ backendUrl: url }, () => {
+        showStatus('✅ Settings saved!', 'success');
+      });
+    });
+
+    function showStatus(message, type) {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = message;
+      statusDiv.className = `status-message show status-${type}`;
+    }
+  </script>
+</body>
+</html>

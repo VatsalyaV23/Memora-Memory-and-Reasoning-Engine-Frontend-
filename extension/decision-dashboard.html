@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Decision Dashboard | Org Memory</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <style>
+    :root {
+      --primary: #00daf3;
+      --primary-dark: #009fb2;
+      --bg: #0b1326;
+      --surface: #131b2e;
+      --surface-alt: #1f2937;
+      --text: #dae2fd;
+      --text-secondary: #8b90a0;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .glass-panel {
+      background: rgba(19, 27, 46, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(0, 218, 243, 0.1);
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .5; }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 218, 243, 0.3);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 218, 243, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-0 h-screen w-64 bg-[#0b1326] py-6 flex flex-col border-r border-[rgba(0,218,243,0.1)] z-40">
+    <div class="px-6 mb-10">
+      <h1 class="text-[#00daf3] font-bold text-xl tracking-wider">Decision Hub</h1>
+      <p class="text-[10px] text-[#8b90a0] uppercase tracking-widest mt-1">Team Consensus Engine</p>
+    </div>
+
+    <nav class="flex-1 space-y-2 px-3">
+      <a class="flex items-center gap-3 px-4 py-3 text-[#00daf3] bg-[#1f2937] rounded-lg font-semibold border-l-4 border-[#00daf3]" href="#">
+        <span class="text-lg">📊</span>
+        <span>Decisions</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#8b90a0] hover:text-white transition-colors rounded-lg font-semibold" href="#" data-page="meetings">
+        <span class="text-lg">🎙️</span>
+        <span>Meetings</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#8b90a0] hover:text-white transition-colors rounded-lg font-semibold" href="#" data-page="transcripts">
+        <span class="text-lg">📝</span>
+        <span>Transcripts</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#8b90a0] hover:text-white transition-colors rounded-lg font-semibold" href="#" data-page="voting">
+        <span class="text-lg">🗳️</span>
+        <span>Voting</span>
+      </a>
+    </nav>
+
+    <div class="px-3 mt-auto space-y-2">
+      <button class="w-full py-2.5 bg-gradient-to-br from-[#00daf3] to-[#009fb2] text-[#001f24] rounded-lg font-bold text-sm hover:opacity-90 transition-opacity" id="start-meeting-btn">
+        <span class="text-lg">🎙️</span> Start Meeting
+      </button>
+      <button class="w-full py-2.5 bg-[#1f2937] text-[#8b90a0] rounded-lg font-semibold text-sm hover:bg-[#2d3748] transition-colors" id="settings-btn">
+        <span>⚙️</span> Settings
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="ml-64 min-h-screen">
+    <!-- Header -->
+    <header class="sticky top-0 z-30 bg-[#0b1326]/80 backdrop-blur-xl border-b border-[rgba(0,218,243,0.1)] px-8 py-6 flex justify-between items-center">
+      <div>
+        <h2 class="text-3xl font-bold gradient-text">Final Team Decisions</h2>
+        <p class="text-[#8b90a0] text-sm mt-1">Consensus from all meetings and discussions</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="px-4 py-2 bg-[#1f2937] rounded-lg text-sm">
+          <span class="text-[#8b90a0]">Total Decisions:</span>
+          <span class="text-[#00daf3] font-bold ml-2" id="total-decisions">0</span>
+        </div>
+        <button class="px-6 py-2.5 bg-gradient-to-br from-[#00daf3] to-[#009fb2] text-[#001f24] rounded-lg font-bold hover:opacity-90 transition-opacity" id="refresh-btn">
+          🔄 Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="p-8">
+      <!-- Filters -->
+      <div class="flex gap-4 mb-8">
+        <input 
+          type="text" 
+          placeholder="Search decisions..." 
+          id="search-input"
+          class="px-4 py-2 bg-[#1f2937] border border-[rgba(0,218,243,0.2)] rounded-lg text-[#dae2fd] placeholder-[#8b90a0] focus:outline-none focus:border-[#00daf3]"
+        >
+        <select id="status-filter" class="px-4 py-2 bg-[#1f2937] border border-[rgba(0,218,243,0.2)] rounded-lg text-[#dae2fd] focus:outline-none focus:border-[#00daf3]">
+          <option value="">All Status</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+          <option value="pending">Pending</option>
+          <option value="decided">Decided</option>
+        </select>
+        <select id="consensus-filter" class="px-4 py-2 bg-[#1f2937] border border-[rgba(0,218,243,0.2)] rounded-lg text-[#dae2fd] focus:outline-none focus:border-[#00daf3]">
+          <option value="">All Consensus</option>
+          <option value="unanimous">Unanimous</option>
+          <option value="majority">Majority</option>
+          <option value="split">Split</option>
+        </select>
+      </div>
+
+      <!-- Decisions Grid -->
+      <div id="decisions-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Loading State -->
+        <div class="col-span-2 flex items-center justify-center py-12">
+          <div class="flex flex-col items-center gap-4">
+            <div class="w-12 h-12 border-4 border-[#00daf3]/20 border-t-[#00daf3] rounded-full animate-spin"></div>
+            <p class="text-[#8b90a0]">Loading decisions...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Decision Detail Modal -->
+  <div id="decision-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="glass-panel rounded-xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-gradient-to-r from-[#00daf3] to-[#009fb2] px-6 py-4 flex justify-between items-center">
+        <h3 class="text-xl font-bold text-[#001f24]" id="modal-title">Decision Details</h3>
+        <button class="text-[#001f24] font-bold text-2xl hover:opacity-70" onclick="closeModal()">×</button>
+      </div>
+      
+      <div id="modal-content" class="p-6 space-y-6">
+        <!-- Content will be injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Meeting Modal -->
+  <div id="meeting-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="glass-panel rounded-xl w-full max-w-md mx-4">
+      <div class="bg-gradient-to-r from-[#00daf3] to-[#009fb2] px-6 py-4">
+        <h3 class="text-xl font-bold text-[#001f24]">Start Meeting</h3>
+      </div>
+      
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-2">Meeting Title</label>
+          <input 
+            type="text" 
+            id="meeting-title" 
+            placeholder="e.g., Q4 Planning Session"
+            class="w-full px-4 py-2 bg-[#1f2937] border border-[rgba(0,218,243,0.2)] rounded-lg text-[#dae2fd] focus:outline-none focus:border-[#00daf3]"
+          >
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold mb-2">Participants</label>
+          <input 
+            type="text" 
+            id="meeting-participants" 
+            placeholder="Comma-separated names or emails"
+            class="w-full px-4 py-2 bg-[#1f2937] border border-[rgba(0,218,243,0.2)] rounded-lg text-[#dae2fd] focus:outline-none focus:border-[#00daf3]"
+          >
+        </div>
+
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="enable-recording" checked>
+            <span class="text-sm font-semibold">Enable Audio Recording & Transcription</span>
+          </label>
+        </div>
+
+        <div>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" id="auto-agent" checked>
+            <span class="text-sm font-semibold">Deploy AI Agent to Join Meeting</span>
+          </label>
+        </div>
+
+        <div class="flex gap-3 pt-4">
+          <button 
+            class="flex-1 py-2.5 bg-[#ef4444] text-white rounded-lg font-semibold hover:opacity-90 transition-opacity"
+            onclick="closeModal()"
+          >
+            Cancel
+          </button>
+          <button 
+            class="flex-1 py-2.5 bg-gradient-to-br from-[#00daf3] to-[#009fb2] text-[#001f24] rounded-lg font-bold hover:opacity-90 transition-opacity"
+            id="start-meeting-confirm"
+          >
+            🎙️ Start Meeting
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="decision-dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+﻿# Environment
+.env
+.env.local
+*.pyc
+__pycache__/
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Databases
+*.db
+chroma_data/
+neo4j_data/
+
+# OS
+.DS_Store
+
+# Misc
+*.log

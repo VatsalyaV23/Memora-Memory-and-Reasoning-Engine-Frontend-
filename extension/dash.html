@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Synthetix Intelligence | Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed-dim": "#b9c8de",
+                        "inverse-on-surface": "#283044",
+                        "primary-fixed-dim": "#00daf3",
+                        "surface-bright": "#31394d",
+                        "inverse-primary": "#006875",
+                        "outline-variant": "#414755",
+                        "tertiary": "#b9c8de",
+                        "surface": "#0b1326",
+                        "tertiary-fixed": "#d4e4fa",
+                        "on-primary-fixed": "#001f24",
+                        "on-tertiary-fixed": "#0d1c2d",
+                        "on-secondary-fixed": "#101b30",
+                        "on-background": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#39485a",
+                        "on-primary-container": "#002f35",
+                        "surface-variant": "#2d3449",
+                        "inverse-surface": "#dae2fd",
+                        "surface-container": "#171f33",
+                        "surface-container-highest": "#2d3449",
+                        "on-surface": "#dae2fd",
+                        "secondary-container": "#3e4960",
+                        "on-error-container": "#ffdad6",
+                        "on-surface-variant": "#c1c6d7",
+                        "on-secondary-fixed-variant": "#3c475d",
+                        "outline": "#8b90a0",
+                        "secondary": "#bbc6e2",
+                        "primary-container": "#009fb2",
+                        "surface-dim": "#0b1326",
+                        "surface-tint": "#00daf3",
+                        "on-secondary": "#263046",
+                        "error-container": "#93000a",
+                        "background": "#0b1326",
+                        "on-tertiary": "#233143",
+                        "on-primary-fixed-variant": "#004f58",
+                        "on-tertiary-container": "#1c2b3c",
+                        "on-error": "#690005",
+                        "surface-container-low": "#131b2e",
+                        "surface-container-high": "#222a3d",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#060e20",
+                        "secondary-fixed-dim": "#bbc6e2",
+                        "secondary-fixed": "#d7e2ff",
+                        "on-secondary-container": "#adb8d3",
+                        "on-primary": "#00363d",
+                        "primary": "#00daf3",
+                        "tertiary-container": "#8392a6",
+                        "primary-fixed": "#9cf0ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1326;
+            color: #dae2fd;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(34, 42, 61, 0.6);
+            backdrop-filter: blur(24px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="hidden md:flex flex-col h-screen w-64 bg-[#0b1326] py-6 flex-shrink-0 sticky top-0 border-r-0">
+<div class="px-6 mb-10">
+<h1 class="text-[#00daf3] font-bold text-xl tracking-wider font-['Manrope']">Cognitive Admin</h1>
+<p class="text-[10px] text-[#bbc6e2] uppercase tracking-[0.2em] mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-2">
+<!-- Active Navigation -->
+<a class="flex items-center gap-4 py-3 text-[#00daf3] font-bold border-l-2 border-[#00daf3] pl-4 bg-[#131b2e] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="font-['Manrope'] tracking-tight font-semibold">Knowledge Base</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-[#bbc6e2] hover:text-white pl-4 hover:bg-[#222a3d] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-['Manrope'] tracking-tight font-semibold">Reasoning Engine</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-[#bbc6e2] hover:text-white pl-4 hover:bg-[#222a3d] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-['Manrope'] tracking-tight font-semibold">Agent Management</span>
+</a>
+<a class="flex items-center gap-4 py-3 text-[#bbc6e2] hover:text-white pl-4 hover:bg-[#222a3d] transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['Manrope'] tracking-tight font-semibold">Settings</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<button class="w-full py-3 bg-gradient-to-br from-[#00daf3] to-[#009fb2] text-[#001f24] rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#00daf3]/20">
+<span class="material-symbols-outlined">add</span>
+                New Agent
+            </button>
+<div class="mt-6 flex items-center gap-3 px-2">
+<div class="h-10 w-10 rounded-full bg-surface-container-highest overflow-hidden border border-[#414755]/30">
+<img alt="User profile" data-alt="professional headshot of an executive in a dark suit with a clean architectural background and soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4HDsE_ave01pJNgsc0SDqysozgFMwOAXXJ47aX2UaVVxoTQuydou4H_dXwG4p4jxGN2y1JsseUzze6RCjLCYKwfR7dkjRQQPMmsWMGAdY4G4CEP-3rNyUZTzYuKqOf6WaNYq32ZeaTbRBZKlEAYUNPWjnjuUaFvCdu2-T4Upk4i9Cq2EjBYebQid2kXiLBJKxb6Xb6Hk0UhY1eHiLYPDoA6m-uCIHCzCS50MkUPuYjFWC8JkeHQJN7DwWf8YgTWM7voDMsQr3dQ"/>
+</div>
+<div>
+<p class="text-sm font-bold text-white">Alex Chen</p>
+<p class="text-[10px] text-[#bbc6e2]">Director of AI</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar -->
+<header class="w-full h-16 sticky top-0 z-50 bg-[#0b1326]/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-[0_4px_20px_rgba(0,218,243,0.05)]">
+<div class="flex items-center gap-8">
+<span class="font-['Manrope'] font-black text-[#00daf3] text-lg">Orchestrated Intelligence</span>
+<div class="hidden lg:flex items-center bg-[#222a3d] rounded-full px-4 py-1.5 focus-within:ring-1 focus-within:ring-[#00daf3]/30 transition-all">
+<span class="material-symbols-outlined text-[#bbc6e2] text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder-[#bbc6e2] w-64" placeholder="Global search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-[#bbc6e2] hover:text-white transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-[#bbc6e2] hover:text-white transition-all">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high border border-outline-variant/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 space-y-12 max-w-[1600px] mx-auto w-full">
+<!-- Hero Search Area -->
+<section class="relative py-12">
+<div class="max-w-3xl mx-auto text-center space-y-8">
+<div class="space-y-2">
+<span class="text-[#00daf3] font-['Inter'] text-[10px] uppercase tracking-[0.3em] font-bold">Synthetix Intelligence Core</span>
+<h2 class="text-4xl md:text-5xl font-['Manrope'] font-extrabold tracking-tight text-white leading-tight">Ask Anything.</h2>
+</div>
+<div class="relative group">
+<div class="absolute -inset-1 bg-gradient-to-r from-[#00daf3]/20 to-transparent rounded-full blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
+<div class="relative flex items-center bg-[#222a3d] rounded-full p-2 border border-[#414755]/20 shadow-2xl transition-all duration-300 focus-within:bg-[#31394d]">
+<span class="material-symbols-outlined ml-4 text-[#00daf3]">bolt</span>
+<input class="flex-1 bg-transparent border-none focus:ring-0 px-4 py-4 text-white font-['Inter'] placeholder-[#bbc6e2]" placeholder="Explain the quarterly market shifts based on Slack internal logs..." type="text"/>
+<button class="bg-[#00daf3] text-[#001f24] h-12 w-12 rounded-full flex items-center justify-center font-bold shadow-lg hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="flex flex-wrap justify-center gap-3">
+<span class="px-3 py-1.5 bg-[#131b2e] rounded-lg text-xs text-[#bbc6e2] hover:text-[#00daf3] cursor-pointer transition-colors border border-[#414755]/10">Summarize Project Orion</span>
+<span class="px-3 py-1.5 bg-[#131b2e] rounded-lg text-xs text-[#bbc6e2] hover:text-[#00daf3] cursor-pointer transition-colors border border-[#414755]/10">Check hiring status from Jira</span>
+<span class="px-3 py-1.5 bg-[#131b2e] rounded-lg text-xs text-[#bbc6e2] hover:text-[#00daf3] cursor-pointer transition-colors border border-[#414755]/10">Analyze latest customer feedback</span>
+</div>
+</div>
+</section>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Main Feed -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-['Manrope'] text-xl font-bold text-white flex items-center gap-2">
+<span class="h-2 w-2 rounded-full bg-[#00daf3] animate-pulse"></span>
+                            Recent Reasoning
+                        </h3>
+<button class="text-xs text-[#bbc6e2] hover:text-[#00daf3] transition-colors uppercase tracking-widest font-bold">View Archive</button>
+</div>
+<!-- Feed Cards -->
+<div class="space-y-4">
+<!-- Card 1 -->
+<div class="bg-[#131b2e] rounded-xl p-6 border-l-4 border-[#00daf3] shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-[#00daf3] font-bold uppercase tracking-widest">Decision Matrix</span>
+<span class="text-[10px] text-[#bbc6e2]">• 14m ago</span>
+</div>
+<h4 class="font-['Manrope'] text-lg font-bold text-white">Cloud Infrastructure Migration: Q3 Strategy</h4>
+</div>
+<div class="flex -space-x-2">
+<div class="h-7 w-7 rounded-full border-2 border-[#131b2e] bg-surface-container-highest" title="Alex C.">
+<img alt="Participant" class="w-full h-full rounded-full" data-alt="avatar representing user with initials AC on blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkAClIUTQseWBT46K8GNT05eYYN-Xv8RmKWWPMmnD-_3y2AuupMK6U3y071fKI70--pMced_B3OSzajqIiPKYCoN10b12KcGX6b9pSMUwj0l8YOKFEEx4gC5JVAwvl4xsiWrWj_adWskleFuYPga_WlZEz4mLyD0C8Nywvjy6iaGMbw9i17jZ-rG-xhLgjU0M6PrOfTEf0lqos6uhUCDqfjBBHZMVeZMXGLcc4fchKZVW43tSN58FOBmlRbiwF0KBrm77MHUX88Q"/>
+</div>
+<div class="h-7 w-7 rounded-full border-2 border-[#131b2e] bg-surface-container-highest" title="System Agent">
+<img alt="Participant" class="w-full h-full rounded-full" data-alt="high-tech AI avatar with geometric patterns and neon glow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-Vfsk8mLzXgFbpG7Zdv3ijjpLRKkIdUerHTVU3y7FCVs2efxZnGyXbcRZfnv6YSDy713P5x2gl-8LCGZtlZJxCaPOq1vYMm5pvUahe-mStTTaKjuCFYFalOwq_gzZayUJLa7LmgoZnCa8I8KNIF4ZsPAJShNtZpdXCUP3kvGvr5zi6Mq_5tZGVKOY8UaIMJ2klTx0WHnnCoililKA0DyEpAn6hPW5i2f_bGltJSWrbd50B0vYlBg2i4Y5QYO2mIVkTZpL7i7Pgw"/>
+</div>
+</div>
+</div>
+<p class="text-sm text-[#c1c6d7] leading-relaxed mb-6 font-['Inter']">
+                                The engine analyzed 42 Jira tickets and 3 Slack channels to conclude that AWS transition should be phased over 12 weeks to mitigate data latency risks observed in the dev environment.
+                            </p>
+<div class="grid grid-cols-3 gap-3">
+<div class="bg-[#060e20] p-3 rounded-lg flex items-center gap-3 group hover:bg-[#222a3d] transition-colors">
+<span class="material-symbols-outlined text-sm text-[#00daf3]">mail</span>
+<div class="min-w-0">
+<p class="text-[10px] text-[#bbc6e2] truncate uppercase tracking-tighter">Email Thread</p>
+<p class="text-[11px] text-white truncate font-medium">Q3 Infrastructure Ops</p>
+</div>
+</div>
+<div class="bg-[#060e20] p-3 rounded-lg flex items-center gap-3 group hover:bg-[#222a3d] transition-colors">
+<span class="material-symbols-outlined text-sm text-[#00daf3]">tag</span>
+<div class="min-w-0">
+<p class="text-[10px] text-[#bbc6e2] truncate uppercase tracking-tighter">Slack Context</p>
+<p class="text-[11px] text-white truncate font-medium">#ops-migration-warp</p>
+</div>
+</div>
+<div class="bg-[#060e20] p-3 rounded-lg flex items-center gap-3 group hover:bg-[#222a3d] transition-colors">
+<span class="material-symbols-outlined text-sm text-[#00daf3]">task_alt</span>
+<div class="min-w-0">
+<p class="text-[10px] text-[#bbc6e2] truncate uppercase tracking-tighter">Jira Epic</p>
+<p class="text-[11px] text-white truncate font-medium">INFRA-9022-CLOUD</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-[#131b2e] rounded-xl p-6 border-l-4 border-transparent hover:border-[#bbc6e2]/20 transition-all shadow-lg">
+<div class="flex justify-between items-start mb-4">
+<div class="space-y-1">
+<div class="flex items-center gap-2">
+<span class="text-[10px] text-[#bbc6e2] font-bold uppercase tracking-widest">Sentiment Analysis</span>
+<span class="text-[10px] text-[#bbc6e2]">• 2h ago</span>
+</div>
+<h4 class="font-['Manrope'] text-lg font-bold text-white">Partner Feedback Synthesis</h4>
+</div>
+<div class="flex -space-x-2">
+<div class="h-7 w-7 rounded-full border-2 border-[#131b2e] bg-[#222a3d] flex items-center justify-center">
+<span class="text-[8px] font-bold">JD</span>
+</div>
+</div>
+</div>
+<p class="text-sm text-[#c1c6d7] leading-relaxed mb-6 font-['Inter']">
+                                Detected a 12% drop in satisfaction regarding API documentation clarity based on recent support tickets and Zendesk interaction logs. Recommendation: Update v2.4 docs.
+                            </p>
+<div class="flex gap-2">
+<span class="bg-[#222a3d] px-3 py-1 rounded text-[10px] text-[#00daf3] font-bold uppercase">Critical Priority</span>
+<span class="bg-[#222a3d] px-3 py-1 rounded text-[10px] text-[#bbc6e2] font-bold uppercase">Customer Success</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Activity -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<h3 class="font-['Manrope'] text-xl font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-[#00daf3]">hub</span>
+                        Agent Activity
+                    </h3>
+<div class="bg-[#131b2e] rounded-xl overflow-hidden shadow-2xl">
+<!-- Agent Item 1 -->
+<div class="p-4 border-b border-[#414755]/10 flex items-center gap-4 group hover:bg-[#222a3d] transition-colors">
+<div class="relative h-10 w-10">
+<div class="absolute inset-0 bg-[#00daf3]/10 rounded-full animate-ping"></div>
+<div class="relative h-10 w-10 bg-[#060e20] rounded-full flex items-center justify-center border border-[#00daf3]/50">
+<span class="material-symbols-outlined text-[#00daf3] text-xl">psychology</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-white truncate">Neural Linker v4</p>
+<p class="text-[10px] text-[#00daf3] font-medium italic">Processing Jira Backlog...</p>
+</div>
+<div class="text-[10px] text-[#bbc6e2] font-mono">88%</div>
+</div>
+<!-- Agent Item 2 -->
+<div class="p-4 border-b border-[#414755]/10 flex items-center gap-4 group hover:bg-[#222a3d] transition-colors">
+<div class="h-10 w-10 bg-[#060e20] rounded-full flex items-center justify-center border border-[#414755]/30">
+<span class="material-symbols-outlined text-[#bbc6e2] text-xl">translate</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-white truncate">Linguistic Weaver</p>
+<p class="text-[10px] text-[#bbc6e2]">Idle / Listening</p>
+</div>
+<div class="h-2 w-2 rounded-full bg-green-500/50"></div>
+</div>
+<!-- Agent Item 3 -->
+<div class="p-4 border-b border-[#414755]/10 flex items-center gap-4 group hover:bg-[#222a3d] transition-colors">
+<div class="h-10 w-10 bg-[#060e20] rounded-full flex items-center justify-center border border-[#414755]/30">
+<span class="material-symbols-outlined text-[#bbc6e2] text-xl">monitoring</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="text-xs font-bold text-white truncate">Sentiment Core</p>
+<p class="text-[10px] text-[#bbc6e2]">Syncing with Slack...</p>
+</div>
+<div class="text-[10px] text-[#bbc6e2] font-mono">12%</div>
+</div>
+<div class="p-4">
+<button class="w-full py-2.5 rounded-lg border border-dashed border-[#414755] text-[10px] uppercase tracking-widest text-[#bbc6e2] hover:text-[#00daf3] hover:border-[#00daf3]/50 transition-all font-bold">
+                                + Deploy Instance
+                            </button>
+</div>
+</div>
+<!-- System Pulse Card -->
+<div class="bg-gradient-to-br from-[#131b2e] to-[#060e20] rounded-xl p-6 border border-[#00daf3]/10">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<p class="text-[10px] text-[#00daf3] font-bold uppercase tracking-widest">Compute Health</p>
+<span class="material-symbols-outlined text-sm text-[#00daf3]">verified</span>
+</div>
+<div class="h-1.5 w-full bg-[#222a3d] rounded-full overflow-hidden">
+<div class="h-full bg-[#00daf3] w-2/3 shadow-[0_0_8px_#00daf3]"></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] text-[#bbc6e2]">Active Tokens</p>
+<p class="text-sm font-bold text-white">4.2M / hr</p>
+</div>
+<div>
+<p class="text-[10px] text-[#bbc6e2]">Latency</p>
+<p class="text-sm font-bold text-white">124ms</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<footer class="fixed bottom-0 w-full flex justify-around p-2 z-[100] md:hidden bg-[#131b2e] border-t border-[#414755]/20 shadow-2xl shadow-[#00daf3]/10">
+<button class="flex flex-col items-center text-[#00daf3] bg-[#222a3d] rounded-lg py-1 px-3 tap-scale-95 transition-transform">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Ask</span>
+</button>
+<button class="flex flex-col items-center text-[#bbc6e2] py-1 hover:bg-[#31394d] transition-all">
+<span class="material-symbols-outlined">segment</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Context</span>
+</button>
+<button class="flex flex-col items-center text-[#bbc6e2] py-1 hover:bg-[#31394d] transition-all">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Agents</span>
+</button>
+</footer>
+</body></html>

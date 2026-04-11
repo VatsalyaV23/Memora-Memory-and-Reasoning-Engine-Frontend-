@@ -1,0 +1,604 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Org Memory Engine</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #00daf3;
+      --primary-dark: #009fb2;
+      --bg: #0b1326;
+      --surface: #131b2e;
+      --surface-alt: #1f2937;
+      --text: #dae2fd;
+      --text-secondary: #8b90a0;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    body {
+      width: 520px;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, var(--bg) 0%, #1a2847 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .container {
+      height: 680px;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #001f24;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 218, 243, 0.15);
+    }
+
+    .header h1 {
+      font-size: 24px;
+      margin-bottom: 4px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      font-size: 11px;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid rgba(0, 218, 243, 0.1);
+      gap: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px 12px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 3px solid transparent;
+      position: relative;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+      background: rgba(0, 218, 243, 0.05);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(0, 218, 243, 0.1);
+    }
+
+    .tab-btn span {
+      font-size: 14px;
+      margin-right: 4px;
+    }
+
+    /* ===== TAB CONTENT ===== */
+    .tabs-container {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .tab-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(0, 218, 243, 0.3);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 218, 243, 0.6);
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group textarea,
+    .input-group input,
+    .input-group select {
+      padding: 12px;
+      border: 1px solid rgba(0, 218, 243, 0.2);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 12px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .input-group textarea::placeholder,
+    .input-group input::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .input-group textarea:focus,
+    .input-group input:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: rgba(0, 218, 243, 0.05);
+      box-shadow: 0 0 12px rgba(0, 218, 243, 0.2);
+    }
+
+    .input-group textarea {
+      resize: vertical;
+      min-height: 100px;
+      font-family: 'Courier New', monospace;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #001f24;
+      width: 100%;
+      box-shadow: 0 4px 16px rgba(0, 218, 243, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 218, 243, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: var(--surface-alt);
+      color: var(--primary);
+      border: 1px solid rgba(0, 218, 243, 0.3);
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 218, 243, 0.1);
+      border-color: var(--primary);
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 10px;
+      margin-right: 6px;
+    }
+
+    /* ===== STATUS MESSAGES ===== */
+    .status-box {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      display: none;
+      margin-bottom: 12px;
+      border-left: 4px solid;
+      animation: slideIn 0.3s ease;
+    }
+
+    .status-box.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      border-color: var(--success);
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--error);
+      border-color: var(--error);
+    }
+
+    .status-info {
+      background: rgba(0, 218, 243, 0.1);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .status-warning {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--warning);
+      border-color: var(--warning);
+    }
+
+    .status-loading {
+      background: rgba(0, 218, 243, 0.1);
+      color: var(--primary);
+      border-color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .spinner {
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(0, 218, 243, 0.3);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== RESULTS ===== */
+    .result-item {
+      background: var(--surface);
+      border: 1px solid rgba(0, 218, 243, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      transition: all 0.3s ease;
+    }
+
+    .result-item:hover {
+      border-color: var(--primary);
+      background: rgba(0, 218, 243, 0.05);
+    }
+
+    .result-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+      font-size: 12px;
+    }
+
+    .result-meta {
+      color: var(--text-secondary);
+      font-size: 10px;
+      margin-top: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 600;
+      margin-right: 4px;
+      margin-top: 4px;
+      background: rgba(0, 218, 243, 0.2);
+      color: var(--primary);
+    }
+
+    /* ===== SETTINGS ===== */
+    .setting-item {
+      background: var(--surface);
+      border: 1px solid rgba(0, 218, 243, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    .setting-item label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .setting-item input {
+      width: 100%;
+    }
+
+    .info-box {
+      background: rgba(0, 218, 243, 0.1);
+      border-left: 4px solid var(--primary);
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 10px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .info-box strong {
+      color: var(--primary);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--surface);
+      border-top: 1px solid rgba(0, 218, 243, 0.1);
+      padding: 12px;
+      font-size: 10px;
+      color: var(--text-secondary);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== MONITOR BUTTON ===== */
+    .monitor-btn {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: #001f24;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 16px rgba(0, 218, 243, 0.2);
+    }
+
+    .monitor-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 218, 243, 0.3);
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .text-preview {
+      background: var(--surface);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 218, 243, 0.2);
+      font-size: 11px;
+      color: var(--text-secondary);
+      max-height: 120px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(0, 218, 243, 0.1);
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🧠 ORG MEMORY</h1>
+      <p>Capture & Reason About Decisions</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="capture">
+        <span>📥</span> Capture
+      </button>
+      <button class="tab-btn" data-tab="extract">
+        <span>🔍</span> Extract
+      </button>
+      <button class="tab-btn" data-tab="ask">
+        <span>❓</span> Ask
+      </button>
+      <button class="tab-btn" data-tab="settings">
+        <span>⚙️</span> Settings
+      </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tabs-container">
+      <!-- CAPTURE TAB -->
+      <div class="tab-content active" id="capture">
+        <div class="status-box" id="capture-status"></div>
+
+        <div class="input-group">
+          <label>📄 Text to Capture</label>
+          <textarea id="capture-text" placeholder="Paste decision or discussion text here..."></textarea>
+        </div>
+
+        <div class="input-group">
+          <label>🏷️ Source</label>
+          <select id="capture-source">
+            <option value="slack">Slack</option>
+            <option value="gmail">Gmail</option>
+            <option value="meeting">Meeting Notes</option>
+            <option value="document">Document</option>
+            <option value="manual">Manual Entry</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>🔗 URL (Optional)</label>
+          <input type="text" id="capture-url" placeholder="https://...">
+        </div>
+
+        <button class="btn btn-primary" id="capture-btn">
+          <span>📥</span> Capture Text
+        </button>
+
+        <div id="capture-results"></div>
+      </div>
+
+      <!-- EXTRACT TAB -->
+      <div class="tab-content" id="extract">
+        <div class="status-box" id="extract-status"></div>
+
+        <div class="info-box">
+          💡 <strong>How it works:</strong><br>
+          1. Add text in Capture tab<br>
+          2. Click "Capture Text"<br>
+          3. AI extracts decisions automatically
+        </div>
+
+        <button class="btn btn-primary" id="extract-btn">
+          <span>🔍</span> Extract Decisions
+        </button>
+
+        <div id="extract-results"></div>
+      </div>
+
+      <!-- ASK TAB -->
+      <div class="tab-content" id="ask">
+        <div class="status-box" id="ask-status"></div>
+
+        <div class="input-group">
+          <label>❓ Ask a Question</label>
+          <textarea id="ask-question" placeholder="e.g., What framework did we choose?"></textarea>
+        </div>
+
+        <button class="btn btn-primary" id="ask-btn">
+          <span>💭</span> Get Answer
+        </button>
+
+        <div id="ask-results"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div class="tab-content" id="settings">
+        <div class="monitor-btn" id="open-monitor">
+          📊 Open Agent Monitor
+        </div>
+
+        <div class="setting-item">
+          <label>Backend URL</label>
+          <input type="text" id="backend-url" placeholder="http://localhost:8000">
+        </div>
+
+        <button class="btn btn-primary" id="test-connection-btn">
+          <span>🔗</span> Test Connection
+        </button>
+
+        <button class="btn btn-secondary" id="save-settings-btn">
+          <span>💾</span> Save Settings
+        </button>
+
+        <div id="settings-status"></div>
+
+        <div class="divider"></div>
+
+        <div class="info-box">
+          <strong>ℹ️ About</strong><br>
+          Org Memory Engine v1.0<br><br>
+          <strong>Features:</strong><br>
+          ✓ Capture organizational decisions<br>
+          ✓ Extract insights with AI<br>
+          ✓ RAG-based Q&A<br>
+          ✓ Real-time monitoring<br><br>
+          <strong>Backend:</strong> <span id="backend-status-info">Checking...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>v1.0.0</span>
+      <a href="https://github.com/DonV09/org-memory-engine" target="_blank">GitHub</a>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

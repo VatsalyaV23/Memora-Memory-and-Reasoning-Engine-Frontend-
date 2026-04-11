@@ -1,0 +1,37 @@
+﻿{
+  "manifest_version": 3,
+  "name": "Org Memory Engine",
+  "version": "1.0.0",
+  "description": "Capture organizational decisions and extract insights with AI",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "contextMenus"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://localhost/*",
+    "http://127.0.0.1/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Org Memory Engine"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "options_page": "settings.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["agent-monitor.html"],
+      "matches": ["http://localhost/*"]
+    }
+  ]
+}
