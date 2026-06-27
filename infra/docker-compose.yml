@@ -1,24 +1,24 @@
-﻿version: '3.8'
-
-services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: org-memory-postgres
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres_password_docker
-      POSTGRES_DB: org_memory
-      POSTGRES_INITDB_ARGS: "--encoding=UTF8"
+﻿services:
+  
+  backend:
+    image: python:3.11-slim
+    container_name: org-memory-backend
+    working_dir: /app
     ports:
-      - "5432:5432"
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - DATABASE_URL=postgresql://orgmemory:postgres_password_docker@postgres:5432/org_memory
+      - CHROMA_DB_PATH=/app/chroma_data
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d org_memory"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
+      - ../backend:/app
+      - chroma_data:/app/chroma_data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      chromadb:
+        condition: service_started
     networks:
       - org-memory-network
     restart: unless-stopped
@@ -28,24 +28,42 @@ services:
     container_name: org-memory-chromadb
     ports:
       - "8001:8000"
-    environment:
-      IS_PERSISTENT: 'TRUE'
-      PERSIST_DIRECTORY: /chroma_data
     volumes:
-      - chromadb_data:/chroma_data
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
+      - chromadb_data:/chroma/data
+    environment:
+      - IS_PERSISTENT=True
+      - ALLOW_RESET=True
     networks:
       - org-memory-network
     restart: unless-stopped
 
+  postgres:
+    image: postgres:15-alpine
+    container_name: org-memory-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=orgmemory
+      - POSTGRES_PASSWORD=postgres_password_docker
+      - POSTGRES_DB=org_memory
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - org-memory-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U orgmemory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
-  postgres_data:
+  chroma_data:
+    driver: local
   chromadb_data:
+    driver: local
+  postgres_data:
+    driver: local
 
 networks:
   org-memory-network:

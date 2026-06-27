@@ -27,11 +27,5 @@
       "js": ["content.js"]
     }
   ],
-  "options_page": "settings.html",
-  "web_accessible_resources": [
-    {
-      "resources": ["agent-monitor.html"],
-      "matches": ["http://localhost/*"]
-    }
-  ]
+  "options_page": "settings.html"
 }
